@@ -18,7 +18,12 @@ image=$DH_USER/$DH_REPO:$tag
 entry=$PWD
 option="-v $HOME:$HOME:rw --privileged=true -e ENTRY=$entry"
 option_network="--net=host"
-option_display="-e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v $HOME/.Xauthority:/root/.Xauthority"
+option_display=""
+
+# initialize flag
+compile_flag=0
+nameserver_flag=0
+xforward_flag=0
 
 function usage()
 {
@@ -49,6 +54,7 @@ Options:
   -t, --tag TAGNAME   : Tag
   -r, --run COMPONENT : Run your component
   -c, --compile [ARG] : Compile your C++ component
+  -x, --xforward      : Enable X-forwarding
 EOS
   exit 1
 }
@@ -88,6 +94,10 @@ for OPT in "$@"
         nameserver_flag=1
         shift 1
         ;;
+      '-x'|'--xforward' )
+        xforward_flag=1
+        shift 1
+        ;;
       '--'|'-' )
         shift 1
         param+=( "$@" )
@@ -106,7 +116,7 @@ for OPT in "$@"
     esac
 done
 
-case "$1" in
+case "$param" in
   'openrtp')
     command="openrtp"
     ;;
@@ -144,15 +154,19 @@ if [[ "$nameserver_flag" == "1" ]]; then
     command="rtm-naming;"$command
 fi
 
-# Enable X11-forwarding
-xhost local: > /dev/null
+if [[ "$xforward_flag" == "1" ]]; then
+  # Enable X11-forwarding
+  xhost local: > /dev/null
+  option_display="-e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v $HOME/.Xauthority:/root/.Xauthority"
+fi
 
-# Start docker w/X11-forwarding
-echo "IMAGE: $image"
-echo "COMMAND: $command"
+# Start docker
+echo "IMAGE: $image/COMMAND: $command"
 docker run -ti --rm $option $option_display $option_network $image "$command"
 
-# Disable X11-forwarding
-xhost - > /dev/null
+if [[ "$xforward_flag" == "1" ]]; then
+  # Disable X11-forwarding
+  xhost - > /dev/null
+fi
 
 exit 0
