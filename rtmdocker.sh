@@ -32,26 +32,33 @@ Usage: $prog [OPTIONS] COMMAND
   This is utility script for OpenRTM on Docker.
 
 Command:
-  rtm-naming        : Run name server
-  openrtp           : Run OpenRTP
-  bash              : Run bash
-  Composit          : Run C++ example component "Composite"
-  ConsigSample      : Run C++ example component "ConsigSampleComp"
-  ConsoleIn         : Run C++ example component "ConsoleInComp"
-  ConsoleOut        : Run C++ example component "ConsoleOutComp"
-  Controller        : Run C++ example component "ControllerComp"
-  Motor             : Run C++ example component "MotorComp"
-  SeqIn             : Run C++ example component "SeqInComp"
-  SeqOut            : Run C++ example component "SeqOutComp"
-  MyServiceConsumer : Run C++ example component "SeqOutComp"
-  MyServiceProvider : Run C++ example component "SeqOutComp"
-  Sensor            : Run C++ example component "SensorComp"
+  openrtp             : Run OpenRTP
+  bash                : Run bash
+  Composit            : Run C++ example component "Composite"
+  ConsigSample        : Run C++ example component "ConsigSampleComp"
+  ConsoleIn           : Run C++ example component "ConsoleInComp"
+  ConsoleInPy         : Run Python example component "ConsoleInComp"
+  ConsoleOut          : Run C++ example component "ConsoleOutComp"
+  ConsoleOutPy        : Run Python example component "ConsoleOutComp"
+  Controller          : Run C++ example component "ControllerComp"
+  Motor               : Run C++ example component "MotorComp"
+  SeqIn               : Run C++ example component "SeqInComp"
+  SeqInPy             : Run Python example component "SeqInComp"
+  SeqOut              : Run C++ example component "SeqOutComp"
+  SeqOutPy            : Run Python example component "SeqOutComp"
+  TkJoyStick          : Run Python example component "TkJoyStick"
+  TkLRFViewer         : Run Python example component "TkLRFViewer"
+  MyServiceConsumer   : Run C++ example component "SeqOutComp"
+  MyServiceConsumerPy : Run Python example component "SeqOutComp"
+  MyServiceProvider   : Run C++ example component "SeqOutComp"
+  MyServiceProviderPy : Run Python example component "SeqOutComp"
+  Sensor              : Run C++ example component "SensorComp"
 
 Options:
   -h, --help          : Print this message
   -v, --version       : Print version of this script
-  -n, --nameserver    : Run command with nameserver
-  -t, --tag TAGNAME   : Tag
+  -n, --nameserver    : Run command with starting nameserver
+  -t, --tag TAGNAME   : Tag of image
   -r, --run COMPONENT : Run your component
   -c, --compile [ARG] : Compile your C++ component
   -x, --xforward      : Enable X-forwarding
@@ -59,6 +66,73 @@ EOS
   exit 1
 }
 
+function set_command()
+{
+  local example="/usr/share/openrtm-1.1/example"
+  local example_py="$example/python"
+
+  case "$1" in
+    'openrtp')
+      command="openrtp"
+    ;;
+    'Controller')
+      command="$example/ControllerComp"
+      ;;
+    'Motor')
+      command="$example/MotorComp"
+      ;;
+    'ConsoleIn')
+      command="$example/ConsoleInComp"
+      ;;
+    'ConsoleOut')
+      command="$example/ConsoleOutComp"
+      ;;
+    'SeqOut')
+      command="$example/SeqOutComp"
+      ;;
+    'SeqIn')
+      command="$example/SeqInComp"
+      ;;
+    'ConsoleInPy')
+      command="python $example_py/SimpleIO/ConsoleIn.py"
+      ;;
+    'ConsoleOutPy')
+      command="python $example_py/SimpleIO/ConsoleOut.py"
+      ;;
+    'SeqOutPy')
+      command="python $example_py/SeqIO/SeqOut.py"
+      ;;
+    'SeqInPy')
+      command="python $example_py/SeqIO/SeqIn.py"
+      ;;
+    'TkJoyStick')
+      command="python $example_py/TkJoyStick/TkJoyStickComp.py"
+      ;;
+    'TkLRFViewer')
+      command="python $example_py/TkLRFViewer/TkLRFViewer.py"
+      ;;
+    'MyServiceConsumer')
+      command="$example/MyServiceConsumerComp"
+      ;;
+    'MyServiceProvider')
+      command="$example/MyServiceProviderComp"
+      ;;
+    'MyServiceConsumerPy')
+      command="python $example_py/SimpleService/MyServiceConsumer.py"
+      ;;
+    'MyServiceProviderPy')
+      command="python $example_py/SimpleService/MyServiceProvider.py"
+      ;;
+    'Sensor')
+      command="$example/SensorComp"
+      ;;
+    'bash'|*)
+      command="bash"
+      ;;
+  esac
+
+  return
+}
 
 for OPT in "$@"
   do
@@ -116,35 +190,7 @@ for OPT in "$@"
     esac
 done
 
-case "$param" in
-  'openrtp')
-    command="openrtp"
-    ;;
-  'Controller')
-    command="/usr/share/openrtm-1.1/example/ControllerComp"
-    ;;
-  'ConsoleIn')
-    command="/usr/share/openrtm-1.1/example/ConsoleInComp"
-    ;;
-  'ConsoleOut')
-    command="/usr/share/openrtm-1.1/example/ConsoleInComp"
-    ;;
-  'Motor')
-    command="/usr/share/openrtm-1.1/example/MotorComp"
-    ;;
-  'SeqOut')
-    command="/usr/share/openrtm-1.1/example/SeqOutComp"
-    ;;
-  'SeqIn')
-    command="/usr/share/openrtm-1.1/example/SeqInComp"
-    ;;
-  'Sensor')
-    command="/usr/share/openrtm-1.1/example/SensorComp"
-    ;;
-  'bash'|*)
-    command="bash"
-    ;;
-esac
+set_command "$param"
 
 if [[ "$compile_flag" == "1" ]]; then
     command="apt-get update && apt-get -y install cmake && cd $compile_target && mkdir -p build && cd build cmake .. && make"
