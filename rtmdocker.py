@@ -14,6 +14,7 @@ class Rtmdocker:
         if self._args.xforward:
             self.enable_x()
 
+        # Start Docker
         print(self._command)
         os.system(self._command)
 
@@ -28,9 +29,9 @@ class Rtmdocker:
         argparser.add_argument('command', type=str, default='bash', help='command')
         argparser.add_argument('-v', '--version', action='version', version='%(prog)s 1.0.0')
         argparser.add_argument('-n', '--nameserver', action='store_true', help='run command with starting nameserver')
-        argparser.add_argument('-c', '--compile', type=str, dest='compile_component', help='compile your C++ component')
         argparser.add_argument('-t', '--tag', type=str, dest='tagname', default='latest', help='tag name of image')
-        argparser.add_argument('-r', '--run', type=str, dest='run_component', help='run your component')
+        argparser.add_argument('-r', '--run', type=str, dest='run_component', help='run your C++ component')
+        argparser.add_argument('-c', '--compile', type=str, dest='compile_component', help='compile your C++ component')
         argparser.add_argument('-x', '--xforward', action='store_true', help='enable X forwarding')
         return argparser.parse_args()
 
@@ -38,6 +39,7 @@ class Rtmdocker:
         example = "/usr/share/openrtm-1.1/example"
         example_py = "python " + example + "/python"
 
+        # command list
         c_dict = {"openrtp": "openrtp",
                   "Controller": example + "/ControllerComp",
                   "Motor": example + "/MotorComp",
@@ -66,24 +68,36 @@ class Rtmdocker:
 
     def assume_options(self, args, command):
         # Docker Option
-        entry = os.getcwd()
-
         option_list = []
-        option = "-v $HOME:$HOME:rw --privileged=true -e ENTRY=" + entry
+        if self._platform == "win32":
+            home = os.eviron.get('HOMEPATH')
+        else:
+            home = os.eviron.get('HOME')
+
+        entry = os.getcwd()
+        option = "-v " + home + ":" + home + ":rw --privileged=true -e ENTRY=" + entry
         option_list.append(option)
 
-        if args.xforward:
+        if args.xforward and self._platform == "win32":
+            # X forwarding (Linux/Mac only)
             option_display = "-e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v $HOME/.Xauthority:/root/.Xauthority"
             option_list.append(option_display)
 
         if args.nameserver:
+            # Add starting nameserver
             command = "rtm-naming;" + command
 
         if args.compile_component:
+            # Compile C++ component
             command = "apt-get update && apt-get -y install cmake && cd " + entry + " && mkdir -p build && cd build cmake .. && make"
 
         if args.run_component:
-            command = args.run_component
+            if args.run_component in '.py':
+                # Python compnent
+                command = "python " + args.run_component
+            else:
+                # C++ compnent
+                command = "./" + args.run_component
 
         option_network = "--net=host"
         option_list.append(option_network)
