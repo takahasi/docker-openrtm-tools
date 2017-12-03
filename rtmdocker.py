@@ -1,9 +1,18 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# -*- Python -*-
+
 import sys
 import os
-from argparse import ArgumentParser
+import argparse
 
 
 class Rtmdocker:
+    ''' Utility class to operate OpenRTM on Docker
+
+    This is utility class to operate OpenRTM on Docker.
+
+    '''
     def __init__(self):
         self._platform = sys.platform
         self._args = self.parser()
@@ -25,8 +34,26 @@ class Rtmdocker:
 
     def parser(self):
         usage = 'Usage: python {} [-v] [-n] [-t <tag>] [-x] [-c <comp>] [-r <comp>] [--help] command'.format(__file__)
-        argparser = ArgumentParser(usage=usage)
-        argparser.add_argument('command', type=str, default='bash', help='command')
+        help_message = 'openrtp             : start OpenRTP\n' + \
+                       'Controller          : start C++ ControllerComp\n' + \
+                       'Motor               : start C++ MotorComp\n' + \
+                       'ConsoleIn           : start C++ ConsoleInComp\n' + \
+                       'ConsoleOut          : start C++ ConsoleOutComp\n' + \
+                       'SeqIn               : start C++ SeqInComp\n' + \
+                       'SeqOut              : start C++ SeqOutComp\n' + \
+                       'MyServiceConsumer   : start C++ MyServiceConsumerComp\n' + \
+                       'MyServiceProvider   : start C++ MyServiceProviderComp\n' + \
+                       'ConsoleInPy         : start Python ConsoleIn.py\n' + \
+                       'ConsoleOutPy        : start Python ConsoleOut.py\n' + \
+                       'SeqInPy             : start Python SeqIn.py\n' + \
+                       'SeqOutPy            : start Python SeqOut.py\n' + \
+                       'MyServiceConsumerPy : start Python MyServiceConsumerComp\n' + \
+                       'MyServiceProviderPy : start Python MyServiceProviderComp\n' + \
+                       'TkJoyStick          : start Python TkJoyStickComp.py\n' + \
+                       'TkLRFViewer         : start Python TkLRFViewer.py\n' + \
+                       'bash                : start bash'
+        argparser = argparse.ArgumentParser(usage=usage, formatter_class=argparse.RawTextHelpFormatter)
+        argparser.add_argument('command', type=str, default='bash', help=help_message)
         argparser.add_argument('-v', '--version', action='version', version='%(prog)s 1.0.0')
         argparser.add_argument('-n', '--nameserver', action='store_true', help='run command with starting nameserver')
         argparser.add_argument('-t', '--tag', type=str, dest='tagname', default='latest', help='tag name of image')
