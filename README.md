@@ -1,6 +1,12 @@
-usage: Usage: python rtmdocker.py [-v] [-n] [-t <tag>] [-x] [-c <comp>] [-r <comp>] [--help] command
+usage:
+------
+```shell
+python rtmdocker.py [-v] [-n] [-t <tag>] [-x] [-c <comp>] [-r <comp>] [--help] command
+```
 
 positional arguments:
+---------------------
+```shell
   command               openrtp             : start OpenRTP
                         Controller          : start C++ ControllerComp
                         Motor               : start C++ MotorComp
@@ -19,8 +25,11 @@ positional arguments:
                         TkJoyStick          : start Python TkJoyStickComp.py
                         TkLRFViewer         : start Python TkLRFViewer.py
                         bash                : start bash
+```
 
 optional arguments:
+-------------------
+```
   -h, --help            show this help message and exit
   -v, --version         show program's version number and exit
   -n, --nameserver      run command with starting nameserver
@@ -31,3 +40,4 @@ optional arguments:
   -c COMPILE_COMPONENT, --compile COMPILE_COMPONENT
                         compile your C++ component
   -x, --xforward        enable X forwarding
+  ```
