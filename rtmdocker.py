@@ -96,13 +96,12 @@ class Rtmdocker:
     def assume_options(self, args, command):
         # Docker Option
         option_list = []
-        if self._platform == "win32":
-            home = os.eviron.get('HOMEPATH')
-        else:
-            home = os.eviron.get('HOME')
-
+        home = os.environ.get('HOME')
         entry = os.getcwd()
-        option = "-v " + home + ":" + home + ":rw --privileged=true -e ENTRY=" + entry
+        if self._platform == "win32":
+            option=""
+        else:
+            option = "-v " + home + ":" + home + ":rw --privileged=true -e" + entry
         option_list.append(option)
 
         if args.xforward and self._platform == "win32":
