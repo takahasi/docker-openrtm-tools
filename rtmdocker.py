@@ -100,8 +100,9 @@ class Rtmdocker:
         entry = os.getcwd()
         if self._platform == "win32":
             option=""
+            option = "-v " + home + ":/home/" + os.environ.get('USERNAME') + ":rw --privileged=true"
         else:
-            option = "-v " + home + ":" + home + ":rw --privileged=true -e" + entry
+            option = "-v " + home + ":" + home + ":rw --privileged=true"
         option_list.append(option)
 
         if args.xforward and self._platform == "win32":
