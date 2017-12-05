@@ -57,7 +57,8 @@ class Rtmdocker:
         argparser.add_argument('-v', '--version', action='version', version='%(prog)s 1.0.0')
         argparser.add_argument('-n', '--nameserver', action='store_true', help='run command with starting nameserver')
         argparser.add_argument('-t', '--tag', type=str, dest='tagname', default='latest', help='tag name of image')
-        argparser.add_argument('-r', '--run', type=str, dest='run_component', help='run your C++ component')
+        argparser.add_argument('-r', '--rdp', action='store_true', help='run command with start RDP server')
+        argparser.add_argument('-e', '--execute', type=str, dest='run_component', help='run your C++ component')
         argparser.add_argument('-c', '--compile', type=str, dest='compile_component', help='compile your C++ component')
         argparser.add_argument('-x', '--xforward', action='store_true', help='enable X forwarding')
         return argparser.parse_args()
@@ -108,6 +109,10 @@ class Rtmdocker:
             # X forwarding (Linux/Mac only)
             option_display = "-e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v $HOME/.Xauthority:/root/.Xauthority"
             option_list.append(option_display)
+
+        if args.rdp:
+            # Add starting xrdp service
+            command = "/etc/init.d/xrdp start;" + command
 
         if args.nameserver:
             # Add starting nameserver
