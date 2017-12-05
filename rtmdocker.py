@@ -111,8 +111,8 @@ class Rtmdocker:
 
         # Set X forwarding
         if args.xforward:
-            user = os.environ.get('DISPLAY')
-            option_display = "-e DISPLAY=" + display + "-v /tmp/.X11-unix:/tmp/.X11-unix -v " + home + "/.Xauthority:/root/.Xauthority"
+            display = os.environ.get('DISPLAY')
+            option_display = "-e DISPLAY=" + display + " -v /tmp/.X11-unix:/tmp/.X11-unix -v " + home + "/.Xauthority:/root/.Xauthority"
             option_list.append(option_display)
 
         if args.rdp:
