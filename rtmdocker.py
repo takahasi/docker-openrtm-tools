@@ -99,13 +99,12 @@ class Rtmdocker:
         home = os.environ.get('HOME')
         entry = os.getcwd()
         if self._platform == "win32":
-            option=""
             option = "-v " + home + ":/home/" + os.environ.get('USERNAME') + ":rw --privileged=true"
         else:
             option = "-v " + home + ":" + home + ":rw --privileged=true"
         option_list.append(option)
 
-        if args.xforward and self._platform == "win32":
+        if args.xforward and self._platform != "win32":
             # X forwarding (Linux/Mac only)
             option_display = "-e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v $HOME/.Xauthority:/root/.Xauthority"
             option_list.append(option_display)
