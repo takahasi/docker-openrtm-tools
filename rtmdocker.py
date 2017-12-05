@@ -97,17 +97,22 @@ class Rtmdocker:
     def assume_options(self, args, command):
         # Docker Option
         option_list = []
-        home = os.environ.get('HOME')
-        entry = os.getcwd()
+
+        # Mount home directory
         if self._platform == "win32":
-            option = "-v " + home + ":/home/" + os.environ.get('USERNAME') + ":rw --privileged=true"
+            user = os.environ.get('USERNAME')
+            home = os.environ.get('USERPROFILE')
+            print(home)
+            option = "-v " + home + ":/home/" + user + ":rw --privileged=true"
         else:
+            home = os.environ.get('HOME')
             option = "-v " + home + ":" + home + ":rw --privileged=true"
         option_list.append(option)
 
-        if args.xforward and self._platform != "win32":
-            # X forwarding (Linux/Mac only)
-            option_display = "-e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v $HOME/.Xauthority:/root/.Xauthority"
+        # Set X forwarding
+        if args.xforward:
+            user = os.environ.get('DISPLAY')
+            option_display = "-e DISPLAY=" + display + "-v /tmp/.X11-unix:/tmp/.X11-unix -v " + home + "/.Xauthority:/root/.Xauthority"
             option_list.append(option_display)
 
         if args.rdp:
@@ -118,6 +123,7 @@ class Rtmdocker:
             # Add starting nameserver
             command = "rtm-naming;" + command
 
+        entry = os.getcwd()
         if args.compile_component:
             # Compile C++ component
             command = "apt-get update && apt-get -y install cmake && cd " + entry + " && mkdir -p build && cd build cmake .. && make"
@@ -125,10 +131,10 @@ class Rtmdocker:
         if args.run_component:
             if args.run_component in '.py':
                 # Python compnent
-                command = "python " + args.run_component
+                command = "cd " + entry + " && python " + args.run_component
             else:
                 # C++ compnent
-                command = "./" + args.run_component
+                command = "cd " + entry + " && ./" + args.run_component
 
         option_network = "--net=host"
         option_list.append(option_network)
