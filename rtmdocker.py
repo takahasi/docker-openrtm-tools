@@ -5,6 +5,7 @@
 import sys
 import os
 import argparse
+import logging
 
 
 class Rtmdocker:
@@ -14,19 +15,28 @@ class Rtmdocker:
 
     '''
     def __init__(self):
+        # Set platform
         self._platform = sys.platform
+        # Set parser
         self._args = self.parser()
+        # Set logger
+        logging.basicConfig(format='%(asctime)s:%(levelname)s: %(message)s',
+                            level=logging.INFO)
+        logging.info("platform: : " + self._platform)
 
     def start(self):
         command = self.assume_command(self._args.command)
         self._command = self.assume_options(self._args, command)
+        # Open x-forwarding
         if self._args.xforward:
             self.enable_x()
 
         # Start Docker
-        print(self._command)
+        logging.info("command: " + self._command)
+        logging.info("start docker ...")
         os.system(self._command)
 
+        # Close x-forwarding
         if self._args.xforward:
             self.disable_x()
 
@@ -88,11 +98,13 @@ class Rtmdocker:
                   "bash": "bash",
                   }
 
-        c = c_dict[command]
-        if c is None:
-            return "bash"
-        else:
-            return c
+        try:
+            c = c_dict[command]
+        except KeyError:
+            logging.warning("undefined command: " + command + ", iinstead use bash")
+            c = "bash"
+
+        return c
 
     def assume_options(self, args, command):
         # Docker Option
@@ -110,24 +122,29 @@ class Rtmdocker:
         option_list.append(option)
 
         # Set X forwarding
+        logging.info("x-forward: " + str(args.xforward))
         if args.xforward:
             display = os.environ.get('DISPLAY')
             option_display = "-e DISPLAY=" + display + " -v /tmp/.X11-unix:/tmp/.X11-unix -v " + home + "/.Xauthority:/root/.Xauthority"
             option_list.append(option_display)
 
+        logging.info("rdp: " + str(args.rdp))
         if args.rdp:
             # Add starting xrdp service
             command = "/etc/init.d/xrdp start;" + command
 
+        logging.info("nameserver: " + str(args.nameserver))
         if args.nameserver:
             # Add starting nameserver
             command = "rtm-naming;" + command
 
         entry = os.getcwd()
+        logging.info("compile_component: " + str(args.compile_component))
         if args.compile_component:
             # Compile C++ component
             command = "apt-get update && apt-get -y install cmake && cd " + entry + " && mkdir -p build && cd build cmake .. && make"
 
+        logging.info("run_component: " + str(args.run_component))
         if args.run_component:
             if args.run_component in '.py':
                 # Python compnent
