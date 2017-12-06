@@ -40,7 +40,10 @@ class Rtmdocker:
         logging.info("command: " + self._command)
         if not self._args.dryrun:
             logging.info("start docker ...")
-            os.system(self._command)
+            try:
+                os.system(self._command)
+            except Exception:
+                logging.error("Docker was exited by exception")
 
         # Close x-forwarding
         if self._args.xforward:
