@@ -15,6 +15,7 @@ class Rtmdocker:
     This is utility class to operate OpenRTM on Docker.
 
     '''
+
     def __init__(self):
         # Set parser
         self._args = self.parser()
@@ -26,7 +27,8 @@ class Rtmdocker:
         logging.info("platform: : " + self._platform)
         # Check docker command
         if not distutils.spawn.find_executable('docker'):
-            logging.error("Docker is not installed. Please install Docker first.")
+            logging.error(
+                "Docker is not installed. Please install Docker first.")
             sys.exit(1)
 
     def start(self):
@@ -72,16 +74,26 @@ class Rtmdocker:
                        'TkJoyStick          : start Python TkJoyStickComp.py\n' + \
                        'TkLRFViewer         : start Python TkLRFViewer.py\n' + \
                        'bash                : start bash'
-        argparser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
-        argparser.add_argument('command', type=str, default='bash', help=help_message)
-        argparser.add_argument('-v', '--version', action='version', version='%(prog)s 1.0.0')
-        argparser.add_argument('-n', '--nameserver', action='store_true', help='run command with starting nameserver')
-        argparser.add_argument('-t', '--tag', type=str, dest='tagname', default='latest', help='tag name of image')
-        argparser.add_argument('-r', '--rdp', action='store_true', help='run command with start RDP server')
-        argparser.add_argument('-d', '--device', type=str, dest='device', help='allow access to device from inside of container')
-        argparser.add_argument('-e', '--execute', type=str, dest='run_component', help='run your C++ component')
-        argparser.add_argument('-c', '--compile', type=str, dest='compile_component', help='compile your C++ component')
-        argparser.add_argument('-x', '--xforward', action='store_true', help='enable X forwarding')
+        argparser = argparse.ArgumentParser(
+            formatter_class=argparse.RawTextHelpFormatter)
+        argparser.add_argument('command', type=str,
+                               default='bash', help=help_message)
+        argparser.add_argument(
+            '-v', '--version', action='version', version='%(prog)s 1.0.0')
+        argparser.add_argument('-n', '--nameserver', action='store_true',
+                               help='run command with starting nameserver')
+        argparser.add_argument('-t', '--tag', type=str, dest='tagname',
+                               default='latest', help='tag name of image')
+        argparser.add_argument(
+            '-r', '--rdp', action='store_true', help='run command with start RDP server')
+        argparser.add_argument('-d', '--device', type=str, dest='device',
+                               help='allow access to device from inside of container')
+        argparser.add_argument('-e', '--execute', type=str,
+                               dest='run_component', help='run your C++ component')
+        argparser.add_argument('-c', '--compile', type=str,
+                               dest='compile_component', help='compile your C++ component')
+        argparser.add_argument(
+            '-x', '--xforward', action='store_true', help='enable X forwarding')
         argparser.add_argument('--dryrun', action='store_true', help='dry run')
         return argparser.parse_args()
 
@@ -115,7 +127,8 @@ class Rtmdocker:
         try:
             c = c_dict[command]
         except KeyError:
-            logging.warning("undefined command: " + command + ", iinstead use bash")
+            logging.warning("undefined command: " +
+                            command + ", iinstead use bash")
             c = "bash"
 
         return c
@@ -147,7 +160,9 @@ class Rtmdocker:
         logging.info("x-forward: " + str(args.xforward))
         if args.xforward:
             display = os.environ.get('DISPLAY')
-            option_display = "-e DISPLAY=" + display + " -v /tmp/.X11-unix:/tmp/.X11-unix -v " + home + "/.Xauthority:/root/.Xauthority"
+            option_display = "-e DISPLAY=" + display + \
+                " -v /tmp/.X11-unix:/tmp/.X11-unix -v " + \
+                home + "/.Xauthority:/root/.Xauthority"
             option_list.append(option_display)
 
         # Add starting xrdp service
@@ -163,7 +178,8 @@ class Rtmdocker:
         logging.info("compile_component: " + str(args.compile_component))
         if args.compile_component:
             # Compile C++ component
-            command = "apt-get update && apt-get -y install cmake && cd " + os.getcwd() + " && mkdir -p build && cd build cmake .. && make"
+            command = "apt-get update && apt-get -y install cmake && cd " + \
+                os.getcwd() + " && mkdir -p build && cd build cmake .. && make"
 
         logging.info("run_component: " + str(args.run_component))
         if args.run_component:
@@ -195,6 +211,7 @@ def main():
     rtmdocker = Rtmdocker()
     rtmdocker.start()
     return
+
 
 if __name__ == "__main__":
     main()
