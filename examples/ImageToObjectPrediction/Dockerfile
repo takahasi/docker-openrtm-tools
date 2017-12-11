@@ -1,8 +1,7 @@
 FROM takahasi/docker-openrtm
 
 RUN pip install chainer && \
-    pip install opencv-python
+    pip install opencv-python && \
+    git clone https://github.com/takahasi/ImageToObjectPrediction.git /tmp/test
 
-COPY ImageToObjectPrediction /tmp/
-
-CMD ["cd /tmp && python ImageToObjectPrediction.py", ""]
+CMD ["cd /tmp/test && python ImageToObjectPrediction.py", ""]
