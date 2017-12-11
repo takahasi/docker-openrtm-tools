@@ -45,31 +45,42 @@ class RtmdockerCleaner:
     def start(self):
         # stop & remove all docker images
         logging.info("Start cleanup all images...")
-
         if self._args.containers or self._args.all:
-            ps = ""
-            try:
-                ps = subprocess.check_output(["docker", "ps",  "-a", "-q"])
-            except subprocess.CalledProcessError:
-                logging.debug("No containers...")
-
-            if ps:
-                logging.info("containers: " + ps)
-                subprocess.call(["docker", "stop", ps])
-                subprocess.call(["docker", "rm", "-f", str(ps)])
-
+            self.remove_containers()
         if self._args.images or self._args.all:
-            images = ""
-            try:
-                images = subprocess.check_output(["docker", "images",  "-a", "-q"])
-            except subprocess.CalledProcessError:
-                logging.debug("No images...")
-
-            if images:
-                logging.info("images: " + images)
-                subprocess.call(["docker", "rmi", "-f", str(images)])
-
+            self.remove_images()
         logging.info("Completed")
+
+    def remove_containers(self):
+        ps = ""
+        try:
+            ps = subprocess.check_output(["docker", "ps",  "-a", "-q"]).replace("\n", "")
+        except subprocess.CalledProcessError:
+            logging.debug("No containers...")
+
+        if ps:
+            logging.info("containers: " + ps)
+            cmd = "docker stop " + str(ps)
+            logging.info("command: " + cmd)
+            subprocess.call(cmd.split(" "))
+            cmd = "docker rm -f " + str(ps)
+            logging.info("command: " + cmd)
+            if not self._args.dryrun:
+                subprocess.call(cmd.split(" "))
+        return
+
+    def remove_images(self):
+        images = ""
+        try:
+            images = subprocess.check_output(["docker", "images",  "-a", "-q"]).replace("\n", "")
+        except subprocess.CalledProcessError:
+            logging.debug("No images...")
+
+        if images:
+            cmd = "docker rmi -f " + str(images)
+            logging.info("command: " + cmd)
+            if not self._args.dryrun:
+                subprocess.call(cmd.split(" "))
         return
 
 
