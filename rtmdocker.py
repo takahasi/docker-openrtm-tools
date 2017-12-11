@@ -25,7 +25,7 @@ class Rtmdocker:
         # Set platform
         self._platform = sys.platform
         logging.info("platform: : " + self._platform)
-        # Check docker command
+        # Check docker command existing
         if not distutils.spawn.find_executable('docker'):
             logging.error(
                 "Docker is not installed. Please install Docker first.")
@@ -94,7 +94,9 @@ class Rtmdocker:
                                dest='compile_component', help='compile your C++ component')
         argparser.add_argument(
             '-x', '--xforward', action='store_true', help='enable X forwarding')
-        argparser.add_argument('--dryrun', action='store_true', help='dry run')
+        argparser.add_argument('-U', '--upgrade', action='store_true',
+                               help='upgrade target image before startup')
+        argparser.add_argument('--dryrun', action='store_true', help='dry run for debug')
         return argparser.parse_args()
 
     def assume_command(self, command):
@@ -175,12 +177,14 @@ class Rtmdocker:
         if args.nameserver:
             command = "rtm-naming;" + command
 
+        # Compile RTC
         logging.info("compile_component: " + str(args.compile_component))
         if args.compile_component:
             # Compile C++ component
             command = "apt-get update && apt-get -y install cmake && cd " + \
                 os.getcwd() + " && mkdir -p build && cd build cmake .. && make"
 
+        # Startup RTC
         logging.info("run_component: " + str(args.run_component))
         if args.run_component:
             if args.run_component in '.py':
@@ -194,7 +198,13 @@ class Rtmdocker:
         option_list.append(option_network)
         option_list.append("takahasi/docker-openrtm:" + args.tagname)
         option_list.append("\"" + command + "\"")
-        return "docker run -ti --rm " + " ".join(option_list)
+
+        # Upgrade image
+        logging.info("upgrade: " + str(args.upgrade))
+        if args.upgrade:
+            return "docker pull takahasi/docker-openrtm:" + args.tagname + ";docker run -ti --rm " + " ".join(option_list)
+        else:
+            return "docker run -ti --rm " + " ".join(option_list)
 
     def enable_x(self):
         if self._platform != "win32":
