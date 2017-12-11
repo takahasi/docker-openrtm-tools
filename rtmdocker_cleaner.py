@@ -52,12 +52,15 @@ class RtmdockerCleaner:
         logging.info("Completed")
 
     def remove_containers(self):
+        # check all docker containers
         ps = ""
         try:
-            ps = subprocess.check_output(["docker", "ps",  "-a", "-q"]).replace("\n", "")
+            cmd = "docker ps -a -q"
+            ps = subprocess.check_output(cmd, shell=True).replace("\n", "")
         except subprocess.CalledProcessError:
-            logging.debug("No containers...")
+            logging.info("No containers...")
 
+        # stop & remove all docker containers if exist
         if ps:
             logging.info("containers: " + ps)
             cmd = "docker stop " + str(ps)
@@ -70,12 +73,15 @@ class RtmdockerCleaner:
         return
 
     def remove_images(self):
+        # check all docker images
         images = ""
         try:
-            images = subprocess.check_output(["docker", "images",  "-a", "-q"]).replace("\n", "")
+            cmd = "docker images -a -q"
+            images = subprocess.check_output(cmd, shell=True).replace("\n", "")
         except subprocess.CalledProcessError:
-            logging.debug("No images...")
+            logging.info("No images...")
 
+        # remove all docker images if exist
         if images:
             cmd = "docker rmi -f " + str(images)
             logging.info("command: " + cmd)

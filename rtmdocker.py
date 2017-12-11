@@ -4,9 +4,11 @@
 
 import sys
 import os
+import subprocess
 import argparse
 import logging
 import distutils.spawn
+import random
 
 
 class Rtmdocker:
@@ -43,8 +45,8 @@ class Rtmdocker:
         if not self._args.dryrun:
             logging.info("start docker ...")
             try:
-                os.system(self._command)
-            except Exception:
+                subprocess.call(self._command, shell=True)
+            except subprocess.CalledProcessError:
                 logging.error("Docker was exited by exception")
 
         # Close x-forwarding
@@ -188,10 +190,10 @@ class Rtmdocker:
         logging.info("run_component: " + str(args.run_component))
         if args.run_component:
             if args.run_component in '.py':
-                # Python compnent
+                # Python component
                 command = "cd " + os.getcwd() + " && python " + args.run_component
             else:
-                # C++ compnent
+                # C++ component
                 command = "cd " + os.getcwd() + " && ./" + args.run_component
 
         option_network = "--net=host"
@@ -199,21 +201,30 @@ class Rtmdocker:
         option_list.append("takahasi/docker-openrtm:" + args.tagname)
         option_list.append("\"" + command + "\"")
 
+        # Naming randomly
+        name = "docker-openrtm-" + str(random.randint(0, 99)) + " "
+
         # Upgrade image
         logging.info("upgrade: " + str(args.upgrade))
         if args.upgrade:
-            return "docker pull takahasi/docker-openrtm:" + args.tagname + ";docker run -ti --rm " + " ".join(option_list)
+            return "docker pull takahasi/docker-openrtm:" + args.tagname + ";docker run -ti --rm --name " + name + " ".join(option_list)
         else:
-            return "docker run -ti --rm " + " ".join(option_list)
+            return "docker run -ti --rm --name " + name + " ".join(option_list)
 
     def enable_x(self):
         if self._platform != "win32":
-            os.system("xhost local: > /dev/null")
+            try:
+                subprocess.call("xhost local: > /dev/null", shell=True)
+            except subprocess.CalledProcessError:
+                logging.error("xhost was exited by exception")
         return
 
     def disable_x(self):
         if self._platform != "win32":
-            os.system("xhost - > /dev/null")
+            try:
+                subprocess.call("xhost - > /dev/null", shell=True)
+            except subprocess.CalledProcessError:
+                logging.error("xhost was exited by exception")
         return
 
 
