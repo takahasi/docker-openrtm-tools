@@ -75,7 +75,7 @@ class Rtmdocker:
                        'MyServiceProviderPy : start Python MyServiceProviderComp\n' + \
                        'TkJoyStick          : start Python TkJoyStickComp.py\n' + \
                        'TkLRFViewer         : start Python TkLRFViewer.py\n' + \
-                       'Affine              : start openCV AffineComp\n' + \
+                       'Affine              : start OpenCV AffineComp\n' + \
                        'BackGroundSubtractionSimple : start OpenCV BackGroundSubtractionSimpleComp\n' + \
                        'Binarization        : start OpenCV BinarizationComp\n' + \
                        'CameraViewer        : start OpenCV CameraViewerComp\n' + \
@@ -92,11 +92,11 @@ class Rtmdocker:
                        'OpenCVCamera        : start OpenCV OpenCVCameraComp\n' + \
                        'Perspective         : start OpenCV PerspectiveComp\n' + \
                        'RockPaperScissors   : start OpenCV RockPaperScissorsComp\n' + \
-                       'Rotate              : start openCV RotateComp\n' + \
+                       'Rotate              : start OpenCV RotateComp\n' + \
                        'Scale               : start OpenCV ScaleComp\n' + \
-                       'Sepia               : start openCV SepiaComp\n' + \
+                       'Sepia               : start OpenCV SepiaComp\n' + \
                        'SubstractCaptureImage : start OpenCV SubstractCaptureImageComp\n' + \
-                       'Template            : start openCV TemplateComp\n' + \
+                       'Template            : start OpenCV TemplateComp\n' + \
                        'Translate           : start OpenCV TranslateComp\n' + \
                        'bash                : start bash'
         argparser = argparse.ArgumentParser(
@@ -195,15 +195,7 @@ class Rtmdocker:
         option_list = []
 
         # Mount home directory
-        if self._platform == "win32":
-            user = os.environ.get('USERNAME')
-            home = os.environ.get('USERPROFILE')
-            entry = "/home/" + user
-            option = "-v " + home + ":" + entry + ":rw --privileged=true --workdir=" + entry
-        else:
-            home = os.environ.get('HOME')
-            entry = home
-            option = "-v " + home + ":" + entry + ":rw --privileged=true --workdir=" + entry
+        option = self.get_mountpoint()
         logging.info("mount: " + str(option))
         option_list.append(option)
 
@@ -219,7 +211,7 @@ class Rtmdocker:
             display = os.environ.get('DISPLAY')
             option_display = "-e DISPLAY=" + display + \
                 " -v /tmp/.X11-unix:/tmp/.X11-unix -v " + \
-                home + "/.Xauthority:/root/.Xauthority"
+                self.get_home() + "/.Xauthority:/root/.Xauthority"
             option_list.append(option_display)
 
         # Add starting xrdp service
@@ -263,6 +255,23 @@ class Rtmdocker:
             return "docker pull takahasi/docker-openrtm:" + self._args.tagname + "&& docker run -ti --rm --name " + name + " ".join(option_list)
         else:
             return "docker run -ti --rm --name " + name + " ".join(option_list)
+
+    def get_home(self):
+        if self._platform == "win32":
+            return os.environ.get('USERPROFILE')
+        else:
+            return os.environ.get('HOME')
+
+    def get_mountpoint(self):
+        # Mount home directory
+        if self._platform == "win32":
+            h = self.get_home()
+            e = "/home/" + os.environ.get('USERNAME')
+            option = "-v " + h + ":" + e + ":rw --privileged=true --workdir=" + e
+        else:
+            h = self.get_home()
+            option = "-v " + h + ":" + h + ":rw --privileged=true --workdir=" + h
+        return option
 
     def enable_x(self):
         if self._platform != "win32":
