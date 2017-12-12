@@ -207,7 +207,7 @@ class Rtmdocker:
         # Upgrade image
         logging.info("upgrade: " + str(args.upgrade))
         if args.upgrade:
-            return "docker pull takahasi/docker-openrtm:" + args.tagname + ";docker run -ti --rm --name " + name + " ".join(option_list)
+            return "docker pull takahasi/docker-openrtm:" + args.tagname + "&& docker run -ti --rm --name " + name + " ".join(option_list)
         else:
             return "docker run -ti --rm --name " + name + " ".join(option_list)
 
