@@ -39,7 +39,8 @@ class RtmdockerCleaner:
                                help='stop & remove all docker containers')
         argparser.add_argument('-a', '--all', action='store_true',
                                help='remove all docker containers & images')
-        argparser.add_argument('--dryrun', action='store_true', help='dry run for debug')
+        argparser.add_argument('--dryrun', action='store_true',
+                               help='dry run for debug')
         return argparser.parse_args()
 
     def start(self):

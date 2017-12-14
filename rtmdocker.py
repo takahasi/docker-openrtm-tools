@@ -56,130 +56,144 @@ class Rtmdocker:
         return
 
     def parser(self):
-        help_message = 'openrtp             : start OpenRTP\n' + \
-                       'Controller          : start C++ ControllerComp\n' + \
-                       'Motor               : start C++ MotorComp\n' + \
-                       'ConsoleIn           : start C++ ConsoleInComp\n' + \
-                       'ConsoleOut          : start C++ ConsoleOutComp\n' + \
-                       'ConfigSample        : start C++ ConfigSampleComp\n' + \
-                       'SeqIn               : start C++ SeqInComp\n' + \
-                       'SeqOut              : start C++ SeqOutComp\n' + \
-                       'MyServiceConsumer   : start C++ MyServiceConsumerComp\n' + \
-                       'MyServiceProvider   : start C++ MyServiceProviderComp\n' + \
-                       'ConsoleInPy         : start Python ConsoleIn.py\n' + \
-                       'ConsoleOutPy        : start Python ConsoleOut.py\n' + \
-                       'ConfigSamplePy      : start Python ConfigSampleComp\n' + \
-                       'SeqInPy             : start Python SeqIn.py\n' + \
-                       'SeqOutPy            : start Python SeqOut.py\n' + \
-                       'MyServiceConsumerPy : start Python MyServiceConsumerComp\n' + \
-                       'MyServiceProviderPy : start Python MyServiceProviderComp\n' + \
-                       'TkJoyStick          : start Python TkJoyStickComp.py\n' + \
-                       'TkLRFViewer         : start Python TkLRFViewer.py\n' + \
-                       'Affine              : start OpenCV AffineComp\n' + \
-                       'BackGroundSubtractionSimple : start OpenCV BackGroundSubtractionSimpleComp\n' + \
-                       'Binarization        : start OpenCV BinarizationComp\n' + \
-                       'CameraViewer        : start OpenCV CameraViewerComp\n' + \
-                       'Chromakey           : start OpenCV ChromakeyComp\n' + \
-                       'DilationErosion     : start OpenCV DilationErotionComp\n' + \
-                       'Edge                : start OpenCV EdgeComp\n' + \
-                       'Findcontour         : start OpenCV FindcontourComp\n' + \
-                       'Flip                : start OpenCV FlipComp\n' + \
-                       'Histogram           : start OpenCV HistogramComp\n' + \
-                       'Hough               : start OpenCV HoughComp\n' + \
-                       'ImageCalibration    : start OpenCV ImageCalibrationComp\n' + \
-                       'ImageSubstraction   : start OpenCV ImageSubstractionComp\n' + \
-                       'ObjectTracking      : start OpenCV ObjectTrackingComp\n' + \
-                       'OpenCVCamera        : start OpenCV OpenCVCameraComp\n' + \
-                       'Perspective         : start OpenCV PerspectiveComp\n' + \
-                       'RockPaperScissors   : start OpenCV RockPaperScissorsComp\n' + \
-                       'Rotate              : start OpenCV RotateComp\n' + \
-                       'Scale               : start OpenCV ScaleComp\n' + \
-                       'Sepia               : start OpenCV SepiaComp\n' + \
-                       'SubstractCaptureImage : start OpenCV SubstractCaptureImageComp\n' + \
-                       'Template            : start OpenCV TemplateComp\n' + \
-                       'Translate           : start OpenCV TranslateComp\n' + \
-                       'bash                : start bash'
+        help_message = (
+            'openrtp             : start OpenRTP\n'
+            'Controller          : start C++ ControllerComp\n'
+            'Motor               : start C++ MotorComp\n'
+            'ConsoleIn           : start C++ ConsoleInComp\n'
+            'ConsoleOut          : start C++ ConsoleOutComp\n'
+            'ConfigSample        : start C++ ConfigSampleComp\n'
+            'SeqIn               : start C++ SeqInComp\n'
+            'SeqOut              : start C++ SeqOutComp\n'
+            'MyServiceConsumer   : start C++ MyServiceConsumerComp\n'
+            'MyServiceProvider   : start C++ MyServiceProviderComp\n'
+            'ConsoleInPy         : start Python ConsoleIn.py\n'
+            'ConsoleOutPy        : start Python ConsoleOut.py\n'
+            'ConfigSamplePy      : start Python ConfigSampleComp\n'
+            'SeqInPy             : start Python SeqIn.py\n'
+            'SeqOutPy            : start Python SeqOut.py\n'
+            'MyServiceConsumerPy : start Python MyServiceConsumerComp\n'
+            'MyServiceProviderPy : start Python MyServiceProviderComp\n'
+            'TkJoyStick          : start Python TkJoyStickComp.py\n'
+            'TkLRFViewer         : start Python TkLRFViewer.py\n'
+            'Affine              : start OpenCV AffineComp\n'
+            'BackGroundSubtractionSimple '
+            ': start OpenCV BackGroundSubtractionSimpleComp\n'
+            'Binarization        : start OpenCV BinarizationComp\n'
+            'CameraViewer        : start OpenCV CameraViewerComp\n'
+            'Chromakey           : start OpenCV ChromakeyComp\n'
+            'DilationErosion     : start OpenCV DilationErotionComp\n'
+            'Edge                : start OpenCV EdgeComp\n'
+            'Findcontour         : start OpenCV FindcontourComp\n'
+            'Flip                : start OpenCV FlipComp\n'
+            'Histogram           : start OpenCV HistogramComp\n'
+            'Hough               : start OpenCV HoughComp\n'
+            'ImageCalibration    : start OpenCV ImageCalibrationComp\n'
+            'ImageSubstraction   : start OpenCV ImageSubstractionComp\n'
+            'ObjectTracking      : start OpenCV ObjectTrackingComp\n'
+            'OpenCVCamera        : start OpenCV OpenCVCameraComp\n'
+            'Perspective         : start OpenCV PerspectiveComp\n'
+            'RockPaperScissors   : start OpenCV RockPaperScissorsComp\n'
+            'Rotate              : start OpenCV RotateComp\n'
+            'Scale               : start OpenCV ScaleComp\n'
+            'Sepia               : start OpenCV SepiaComp\n'
+            'SubstractCaptureImage : start OpenCV SubstractCaptureImageComp\n'
+            'Template            : start OpenCV TemplateComp\n'
+            'Translate           : start OpenCV TranslateComp\n'
+            'bash                : start bash')
+
         argparser = argparse.ArgumentParser(
             formatter_class=argparse.RawTextHelpFormatter)
-        argparser.add_argument('command', type=str,
-                               default='bash', help=help_message)
+        argparser.add_argument(
+            'command', type=str,
+            default='bash', help=help_message)
         argparser.add_argument(
             '-v', '--version', action='version', version='%(prog)s 1.0.0')
-        argparser.add_argument('-n', '--nameserver', action='store_true',
-                               help='run command with starting nameserver')
-        argparser.add_argument('-t', '--tag', type=str, dest='tagname',
-                               default='latest', help='tag name of image')
         argparser.add_argument(
-            '-r', '--rdp', action='store_true', help='run command with start RDP server')
-        argparser.add_argument('-d', '--device', type=str, dest='device',
-                               help='allow access to device from inside of container')
-        argparser.add_argument('-e', '--execute', type=str,
-                               dest='run_component', help='run your C++ component')
-        argparser.add_argument('-c', '--compile', type=str,
-                               dest='compile_component', help='compile your C++ component')
+            '-n', '--nameserver', action='store_true',
+            help='run command with starting nameserver')
         argparser.add_argument(
-            '-x', '--xforward', action='store_true', help='enable X forwarding')
-        argparser.add_argument('-U', '--upgrade', action='store_true',
-                               help='upgrade target image before startup')
-        argparser.add_argument('--dryrun', action='store_true', help='dry run for debug')
+            '-t', '--tag', type=str, dest='tagname',
+            default='latest', help='tag name of image')
+        argparser.add_argument(
+            '-r', '--rdp', action='store_true',
+            help='run command with start RDP server')
+        argparser.add_argument(
+            '-d', '--device', type=str, dest='device',
+            help='allow access to device from inside of container')
+        argparser.add_argument(
+            '-e', '--execute', type=str, dest='run_component',
+            help='run your C++ component')
+        argparser.add_argument(
+            '-c', '--compile', type=str, dest='compile_component',
+            help='compile your C++ component')
+        argparser.add_argument(
+            '-x', '--xforward', action='store_true',
+            help='enable X forwarding')
+        argparser.add_argument(
+            '-U', '--upgrade', action='store_true',
+            help='upgrade target image before startup')
+        argparser.add_argument(
+            '--dryrun', action='store_true',
+            help='dry run for debug')
         return argparser.parse_args()
 
     def assume_command(self, command):
         # OpenRTM version check
         if "120" in self._args.tagname:
-            path_cpp = "/usr/share/openrtm-1.2/components/c++/examples/"
-            path_py = "python /usr/share/openrtm-1.2/components/c++/examples/"
-            path_cv = "/usr/share/openrtm-1.1/components/c++/opencv-rtcs/"
+            cpp = "/usr/share/openrtm-1.2/components/c++/examples/"
+            py = "python /usr/share/openrtm-1.2/components/c++/examples/"
+            cv = "/usr/share/openrtm-1.1/components/c++/opencv-rtcs/"
         else:
-            path_cpp = "/usr/share/openrtm-1.1/example/"
-            path_py = "python " + path_cpp + "/python/"
-            path_cv = "/usr/share/openrtm-1.1/components/c++/opencv-rtcs/"
+            cpp = "/usr/share/openrtm-1.1/example/"
+            py = "python " + cpp + "/python/"
+            cv = "/usr/share/openrtm-1.1/components/c++/opencv-rtcs/"
 
         # command list
-        c_dict = {"openrtp": "openrtp",
-                  "Controller": path_cpp + "ControllerComp",
-                  "Motor": path_cpp + "MotorComp",
-                  "ConsoleIn": path_cpp + "ConsoleInComp",
-                  "ConsoleOut": path_cpp + "ConsoleOutComp",
-                  "ConfigSample": path_cpp + "ConfigSampleComp",
-                  "SeqIn": path_cpp + "SeqInComp",
-                  "SeqOut": path_cpp + "SeqOutComp",
-                  "MyServiceConsumer": path_cpp + "MyServiceConsumerComp",
-                  "MyServiceProvider": path_cpp + "MyServiceProviderComp",
-                  "ConsoleInPy": path_py + "SimpleIO/ConsoleIn.py",
-                  "ConsoleOutPy": path_py + "SimpleIO/ConsoleOut.py",
-                  "ConfigSamplePy": path_py + "ConfigSample/ConfigSample.py",
-                  "SeqInPy": path_py + "SeqIO/SeqIn.py",
-                  "SeqOutPy": path_py + "SeqIO/SeqOut.py",
-                  "MyServiceConsumerPy": path_py + "SimpleService/MyServiceConsumer.py",
-                  "MyServiceProviderPy": path_py + "SimpleService/MyServiceProvider.py",
-                  "TkJoyStick": path_py + "TkJoyStick/TkJoyStickComp.py",
-                  "TkLRFViewer": path_py + "TkLRFViewer/TkLRFViewer.py",
-                  "Affine": path_cv + "AffineComp",
-                  "BackGroundSubtractionSimple": path_cv + "BackGroundSubtractionSimpleComp",
-                  "Binarization": path_cv + "BinarizationComp",
-                  "CameraViewer": path_cv + "CameraViewerComp",
-                  "Chromakey": path_cv + "ChromakeyComp",
-                  "DilationErosion": path_cv + "DilationErotionComp",
-                  "Edge": path_cv + "EdgeComp",
-                  "Findcontour": path_cv + "FindcontourComp",
-                  "Flip": path_cv + "FlipComp",
-                  "Histogram": path_cv + "HistogramComp",
-                  "Hough": path_cv + "HoughComp",
-                  "ImageCalibration": path_cv + "ImageCalibrationComp",
-                  "ImageSubstraction": path_cv + "ImageSubstractionComp",
-                  "ObjectTracking": path_cv + "ObjectTrackingComp",
-                  "OpenCVCamera": path_cv + "OpenCVCameraComp",
-                  "Perspective": path_cv + "PerspectiveComp",
-                  "RockPaperScissors": path_cv + "RockPaperScissorsComp",
-                  "Rotate": path_cv + "RotateComp",
-                  "Scale": path_cv + "ScaleComp",
-                  "Sepia": path_cv + "SepiaComp",
-                  "SubstractCaptureImage": path_cv + "SubstractCaptureImageComp",
-                  "Template": path_cv + "TemplateComp",
-                  "Translate": path_cv + "TranslateComp",
-                  "bash": "bash",
-                  }
+        c_dict = {
+            "openrtp": "openrtp",
+            "Controller": cpp + "ControllerComp",
+            "Motor": cpp + "MotorComp",
+            "ConsoleIn": cpp + "ConsoleInComp",
+            "ConsoleOut": cpp + "ConsoleOutComp",
+            "ConfigSample": cpp + "ConfigSampleComp",
+            "SeqIn": cpp + "SeqInComp",
+            "SeqOut": cpp + "SeqOutComp",
+            "MyServiceConsumer": cpp + "MyServiceConsumerComp",
+            "MyServiceProvider": cpp + "MyServiceProviderComp",
+            "ConsoleInPy": py + "SimpleIO/ConsoleIn.py",
+            "ConsoleOutPy": py + "SimpleIO/ConsoleOut.py",
+            "ConfigSamplePy": py + "ConfigSample/ConfigSample.py",
+            "SeqInPy": py + "SeqIO/SeqIn.py",
+            "SeqOutPy": py + "SeqIO/SeqOut.py",
+            "MyServiceConsumerPy": py + "SimpleService/MyServiceConsumer.py",
+            "MyServiceProviderPy": py + "SimpleService/MyServiceProvider.py",
+            "TkJoyStick": py + "TkJoyStick/TkJoyStickComp.py",
+            "TkLRFViewer": py + "TkLRFViewer/TkLRFViewer.py",
+            "Affine": cv + "AffineComp",
+            "BackGroundSubtractionSimple": cv + "BackGroundSubtractionSimpleComp",
+            "Binarization": cv + "BinarizationComp",
+            "CameraViewer": cv + "CameraViewerComp",
+            "Chromakey": cv + "ChromakeyComp",
+            "DilationErosion": cv + "DilationErotionComp",
+            "Edge": cv + "EdgeComp",
+            "Findcontour": cv + "FindcontourComp",
+            "Flip": cv + "FlipComp",
+            "Histogram": cv + "HistogramComp",
+            "Hough": cv + "HoughComp",
+            "ImageCalibration": cv + "ImageCalibrationComp",
+            "ImageSubstraction": cv + "ImageSubstractionComp",
+            "ObjectTracking": cv + "ObjectTrackingComp",
+            "OpenCVCamera": cv + "OpenCVCameraComp",
+            "Perspective": cv + "PerspectiveComp",
+            "RockPaperScissors": cv + "RockPaperScissorsComp",
+            "Rotate": cv + "RotateComp",
+            "Scale": cv + "ScaleComp",
+            "Sepia": cv + "SepiaComp",
+            "SubstractCaptureImage": cv + "SubstractCaptureImageComp",
+            "Template": cv + "TemplateComp",
+            "Translate": cv + "TranslateComp",
+            "bash": "bash"}
 
         try:
             c = c_dict[command]
@@ -236,10 +250,12 @@ class Rtmdocker:
         if self._args.run_component:
             if self._args.run_component in '.py':
                 # Python component
-                command = "cd " + os.getcwd() + " && python " + self._args.run_component
+                command = "cd " + os.getcwd() + \
+                    " && python " + self._args.run_component
             else:
                 # C++ component
-                command = "cd " + os.getcwd() + " && ./" + self._args.run_component
+                command = "cd " + os.getcwd() + \
+                    " && ./" + self._args.run_component
 
         option_network = "--net=host"
         option_list.append(option_network)
@@ -252,7 +268,9 @@ class Rtmdocker:
         # Upgrade image
         logging.info("upgrade: " + str(self._args.upgrade))
         if self._args.upgrade:
-            return "docker pull takahasi/docker-openrtm:" + self._args.tagname + "&& docker run -ti --rm --name " + name + " ".join(option_list)
+            return "docker pull takahasi/docker-openrtm:" + \
+                self._args.tagname + "&& docker run -ti --rm --name " + \
+                name + " ".join(option_list)
         else:
             return "docker run -ti --rm --name " + name + " ".join(option_list)
 
@@ -267,10 +285,12 @@ class Rtmdocker:
         if self._platform == "win32":
             h = self.get_home()
             e = "/home/" + os.environ.get('USERNAME')
-            option = "-v " + h + ":" + e + ":rw --privileged=true --workdir=" + e
+            option = "-v " + h + ":" + e + \
+                ":rw --privileged=true --workdir=" + e
         else:
             h = self.get_home()
-            option = "-v " + h + ":" + h + ":rw --privileged=true --workdir=" + h
+            option = "-v " + h + ":" + h + \
+                ":rw --privileged=true --workdir=" + h
         return option
 
     def enable_x(self):
