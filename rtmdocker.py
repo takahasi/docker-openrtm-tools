@@ -143,7 +143,7 @@ class Rtmdocker:
         if "120" in self._args.tagname:
             cpp = "/usr/share/openrtm-1.2/components/c++/examples/"
             py = "python /usr/share/openrtm-1.2/components/c++/examples/"
-            cv = "/usr/share/openrtm-1.1/components/c++/opencv-rtcs/"
+            cv = "/usr/share/openrtm-1.2/components/c++/opencv-rtcs/"
         else:
             cpp = "/usr/share/openrtm-1.1/example/"
             py = "python " + cpp + "/python/"
