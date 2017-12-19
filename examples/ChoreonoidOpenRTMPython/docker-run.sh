@@ -11,7 +11,7 @@ fi
 
 # Docker Hub Image
 DH_USER=takahasi
-DH_REPO=docker-openrtm-examples
+DH_REPO=docker-openrtm-tools
 DH_TAG=choreonoid_openrtm_plugin
 
 image=$DH_USER/$DH_REPO:$DH_TAG
@@ -21,7 +21,7 @@ echo "IMAGE: $image"
 entry=$PWD
 option="-v $HOME:$HOME:rw --privileged=true -e ENTRY=$entry"
 option_network="--net=host"
-option_display="-e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v $HOME/.Xauthority:/root/.Xauthority"
+option_display="-e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v $HOME/.Xauthority:/root/.Xauthority --entrypoint bash"
 
 # Enable X11-forwarding
 xhost local:

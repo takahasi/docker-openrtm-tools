@@ -134,6 +134,9 @@ class Rtmdocker:
             '-U', '--upgrade', action='store_true',
             help='upgrade target image before startup')
         argparser.add_argument(
+            '--proxy', type=str, dest='proxy',
+            help='set proxy server address')
+        argparser.add_argument(
             '--dryrun', action='store_true',
             help='dry run for debug')
         return argparser.parse_args()
@@ -227,6 +230,13 @@ class Rtmdocker:
                 " -v /tmp/.X11-unix:/tmp/.X11-unix -v " + \
                 self.get_home() + "/.Xauthority:/root/.Xauthority"
             option_list.append(option_display)
+
+        # Set proxy
+        logging.info("proxy: " + str(self._args.proxy))
+        if self._args.proxy:
+            option_proxy = "-e HTTP_PROXY=" + self._args.proxy
+            option_proxy += " -e HTTPS_PROXY=" + self._args.proxy
+            option_list.append(option_proxy)
 
         # Add starting xrdp service
         logging.info("rdp: " + str(self._args.rdp))
