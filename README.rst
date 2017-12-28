@@ -14,47 +14,89 @@ command
 ^^^^^^^
 
   openrtp                      start OpenRTP
+
   Controller                   start C++ ControllerComp
+
   Motor                        start C++ MotorComp
+
   ConsoleIn                    start C++ ConsoleInComp
+
   ConsoleOut                   start C++ ConsoleOutComp
+
   ConfigSample                 start C++ ConfigSampleComp
+
   SeqIn                        start C++ SeqInComp
+
   SeqOut                       start C++ SeqOutComp
+
   MyServiceConsumer            start C++ MyServiceConsumerComp
+
   MyServiceProvider            start C++ MyServiceProviderComp
+
   ConsoleInPy                  start Python ConsoleIn.py
+
   ConsoleOutPy                 start Python ConsoleOut.py
+
   ConfigSamplePy               start Python ConfigSampleComp
+
   SeqInPy                      start Python SeqIn.py
+
   SeqOutPy                     start Python SeqOut.py
+
   MyServiceConsumerPy          start Python MyServiceConsumerComp
+
   MyServiceProviderPy          start Python MyServiceProviderComp
+
   TkJoyStick                   start Python TkJoyStickComp.py
+
   TkLRFViewer                  start Python TkLRFViewer.py
+
   Affine                       start OpenCV AffineComp
+
   BackGroundSubtractionSimple  start OpenCV BackGroundSubtractionSimpleComp
+
   Binarization                 start OpenCV BinarizationComp
+
   CameraViewer                 start OpenCV CameraViewerComp
+
   Chromakey                    start OpenCV ChromakeyComp
+
   DilationErosion              start OpenCV DilationErotionComp
+
   Edge                         start OpenCV EdgeComp
+
   Findcontour                  start OpenCV FindcontourComp
+
   Flip                         start OpenCV FlipComp
+
   Histogram                    start OpenCV HistogramComp
+
   Hough                        start OpenCV HoughComp
+
   ImageCalibration             start OpenCV ImageCalibrationComp
+
   ImageSubstraction            start OpenCV ImageSubstractionComp
+
   ObjectTracking               start OpenCV ObjectTrackingComp
+
   OpenCVCamera                 start OpenCV OpenCVCameraComp
+
   Perspective                  start OpenCV PerspectiveComp
+
   RockPaperScissors            start OpenCV RockPaperScissorsComp
+
   Rotate                       start OpenCV RotateComp
+
   Scale                        start OpenCV ScaleComp
+
   Sepia                        start OpenCV SepiaComp
+
   SubstractCaptureImage        start OpenCV SubstractCaptureImageComp
+
   Template                     start OpenCV TemplateComp
+
   Translate                    start OpenCV TranslateComp
+
   bash                         start bash
 
 optional arguments
